@@ -2,7 +2,7 @@ import base64
 from services.responses_service import OhSnapResponse
 
 
-class IhSnapImage:
+class ImageService:
 
     __image_base64: bytes
 
