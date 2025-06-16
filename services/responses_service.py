@@ -1,5 +1,6 @@
 import os
-import sys
+import base64
+from io import BytesIO
 from openai import OpenAI
 from google.cloud import storage
 from datetime import timedelta
@@ -26,17 +27,20 @@ class OhSnapResponse:
         return vector_store.id
     
 
-    def prepare_file_for_assistant(self):
-        with open(os.path.join(sys.path[0], "test.jpeg"), "rb") as file:
-            result = self._client.files.create(
-                file=file,
+    def prepare_file_for_assistant(self, file: str):
+        file_obj = BytesIO(base64.b64decode(file.split(",")[1]))
+        file_obj.name = "test.jpeg"
+        result = self._client.files.create(
+                file=file_obj,
                 purpose="vision"
-            )
-            return result.id
+        )
+        return result.id
+            
 
 
-    def get_response(self):
-        file_id = self.prepare_file_for_assistant()
+    def get_response(self, file: str):
+        print(file)
+        file_id = self.prepare_file_for_assistant(file=file)
         response = self._client.responses.create(
             model="gpt-4.1-mini-2025-04-14",
             input=[{

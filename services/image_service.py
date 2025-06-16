@@ -17,4 +17,4 @@ class ImageService:
 
     def get_content_from_image(self) -> str:
            r = OhSnapResponse()
-           return r.get_response()
+           return r.get_response(self.__image_base64)
