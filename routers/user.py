@@ -9,8 +9,12 @@ async def user_signin():
     return
 
 @router.post("/sign_up")
-async def user_signup(user: UserCreate):
-    print(user)
+def user_signup(user: UserCreate):
     res = UserSerivice.create(user)
-    print(res)
     return "All good!"
+
+
+@router.get("/{id}")
+def get_user(id: str):
+    res = UserSerivice.get(id)
+    return res
