@@ -1,4 +1,4 @@
-from dto.user_dto import UserCreate
+from dto.user_dto import UserCreate, UserUpdate, User
 from services.firebase_service import FirebaseService
 
 
@@ -13,13 +13,13 @@ class UserSerivice:
         return res
 
     @staticmethod
-    def update(doc_id: str, data: dict):
+    def update(doc_id: str, data: UserUpdate):
         db = FirebaseService.get_db()
         res = db.collection(UserSerivice.__COLLECTION_NAME).document(doc_id).update(data)
         return res
 
     @staticmethod
-    def get(doc_id: str):
+    def get(doc_id: str) -> User:
         db = FirebaseService.get_db()
         res = db.collection(UserSerivice.__COLLECTION_NAME).document(doc_id).get()
         return res.to_dict()
