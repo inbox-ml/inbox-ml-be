@@ -51,5 +51,8 @@ class OhSnapResponse:
                 ]
             }]
         ) 
+        #make sure to delete files 
+        self._client.files.delete(file_id)
+        
         return response.output_text     
 

@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from services.firebase_service import FirebaseService
 from routers import agent, user
+from middleware.auth import AuthTokenMiddleWare
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -21,6 +22,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"]
 )
+
+app.add_middleware(AuthTokenMiddleWare)
 
 app.include_router(agent.router)
 app.include_router(user.router)
