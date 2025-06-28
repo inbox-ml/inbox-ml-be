@@ -2,6 +2,7 @@ from fastapi import APIRouter, Request, HTTPException
 from dto.user_dto import UserCreate
 from firebase_admin import auth
 from services.user_service import UserSerivice
+from decorators.require_user import require_user
 
 router = APIRouter(prefix="/user")
 
@@ -16,9 +17,9 @@ def user_signup(user: UserCreate):
 
 
 @router.get("/")
-def get_user(request: Request):
+async def get_user(request: Request):
     token = request.state.token
-    
+
     try:
      decoded_token = auth.verify_id_token(token)
      res = UserSerivice.get(decoded_token.get("email"))

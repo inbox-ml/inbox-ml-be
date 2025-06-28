@@ -2,6 +2,7 @@ from fastapi import APIRouter
 from pydantic import BaseModel
 from services.agent_service import AgentService
 from services.image_service import ImageService
+from decorators.require_user import require_user
 
 router = APIRouter(prefix="/agent", tags=["Agent"])
 

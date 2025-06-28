@@ -1,4 +1,5 @@
 from agents import Agent, Runner, WebSearchTool, RunContextWrapper, GuardrailFunctionOutput, input_guardrail
+from services.firebase_service import FirebaseService
 from pydantic import BaseModel
 
 class MailOutput(BaseModel):
@@ -7,6 +8,8 @@ class MailOutput(BaseModel):
 
 class ContentSummaryOutput(BaseModel):
     is_scam: bool
+    category: str
+    summary_title: str
     summary: str        
 
 
@@ -32,6 +35,7 @@ class AgentService:
     async def ask_agent(self, prompt: str):
         self.__agent.input_guardrails=[self.request_guardrail]
         result = await Runner.run(self.__agent, prompt)
+        #self.save_response(data=result.final_output)
         return result.final_output
 
     @staticmethod
@@ -39,3 +43,8 @@ class AgentService:
     async def request_guardrail(ctx: RunContextWrapper, agent: Agent, input: str) -> GuardrailFunctionOutput:
         result = await Runner.run(AgentService.__static_input_guardrail_agent, input, context=ctx.context)
         return GuardrailFunctionOutput(tripwire_triggered=result.final_output.is_not_valid_request, output_info=result.final_output)
+    
+
+    async def save_response(self, data):
+        db = FirebaseService.get_db()
+        #db.collection(f"users/{}history").add(document_data=data)
