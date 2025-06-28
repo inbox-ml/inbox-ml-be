@@ -20,7 +20,7 @@ def require_user(func):
             raise HTTPException(status_code=400, detail="Request object is required")
         
         decoded_token = auth.verify_id_token(request.state.token)
-        user = await UserSerivice.get(decoded_token.get("email"))
+        user = UserSerivice.get(decoded_token.get("email"))
 
         if not user:
             raise HTTPException(status_code=500, detail="Could not get user data")
@@ -28,7 +28,6 @@ def require_user(func):
         request.state.user = user
 
         res = await func(*args, **kwargs)
-        print("After calling the function.")
         return res
 
     return wrapper

@@ -32,10 +32,10 @@ class AgentService:
             output_type=ContentSummaryOutput
             )
 
-    async def ask_agent(self, prompt: str):
+    async def ask_agent(self, prompt: str, email: str):
         self.__agent.input_guardrails=[self.request_guardrail]
         result = await Runner.run(self.__agent, prompt)
-        #self.save_response(data=result.final_output)
+        await self.save_response(data=result.final_output, email=email)
         return result.final_output
 
     @staticmethod
@@ -45,6 +45,8 @@ class AgentService:
         return GuardrailFunctionOutput(tripwire_triggered=result.final_output.is_not_valid_request, output_info=result.final_output)
     
 
-    async def save_response(self, data):
+    async def save_response(self, data, email: str):
         db = FirebaseService.get_db()
-        #db.collection(f"users/{}history").add(document_data=data)
+        print(email)
+        print(data)
+        db.collection("users").document(email).collection("history").add(document_data=data.dict())

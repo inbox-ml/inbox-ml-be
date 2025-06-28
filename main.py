@@ -15,6 +15,8 @@ origins = [
     "http://127.0.0.1:5173",
 ]
 
+app.add_middleware(AuthTokenMiddleWare)
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -22,8 +24,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"]
 )
-
-app.add_middleware(AuthTokenMiddleWare)
 
 app.include_router(agent.router)
 app.include_router(user.router)

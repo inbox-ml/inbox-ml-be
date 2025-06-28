@@ -3,7 +3,6 @@ from starlette.middleware.base import BaseHTTPMiddleware
 
 class AuthTokenMiddleWare(BaseHTTPMiddleware):
     async def dispatch(self, request, call_next):
-        print(request.headers.get("Authorization"))
         token = request.headers.get("Authorization")
         if token is None or not token.startswith("Bearer"):
             raise HTTPException(status_code=401, detail="Missing or invalid Authorization header")

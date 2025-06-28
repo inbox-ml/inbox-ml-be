@@ -2,7 +2,6 @@ from fastapi import APIRouter, Request, HTTPException
 from dto.user_dto import UserCreate
 from firebase_admin import auth
 from services.user_service import UserSerivice
-from decorators.require_user import require_user
 
 router = APIRouter(prefix="/user")
 

@@ -39,7 +39,6 @@ class OhSnapResponse:
 
 
     def get_response(self, file: str):
-        print(file)
         file_id = self.prepare_file_for_assistant(file=file)
         response = self._client.responses.create(
             model="gpt-4.1-mini-2025-04-14",
@@ -53,6 +52,6 @@ class OhSnapResponse:
         ) 
         #make sure to delete files 
         self._client.files.delete(file_id)
-        
+
         return response.output_text     
 
