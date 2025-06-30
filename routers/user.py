@@ -1,7 +1,9 @@
-from fastapi import APIRouter, Request, HTTPException
+from fastapi import APIRouter, Request, HTTPException, Response
 from dto.user_dto import UserCreate
 from firebase_admin import auth
 from services.user_service import UserSerivice
+from decorators.require_user import require_user
+import json
 
 router = APIRouter(prefix="/user")
 
@@ -28,3 +30,13 @@ async def get_user(request: Request):
 
     except:
         raise HTTPException(status_code=401, detail="Invalid token")
+    
+@router.get("/history_list")
+@require_user
+async def get_user_history(request: Request):
+   try:
+      user = request.state.user
+      res = UserSerivice.get_history(user.get("email"))
+      return Response(status_code=201, media_type="application/json", content=json.dumps(res))
+   except:
+      raise HTTPException(status_code=500, detail="Something went wrong when try to pull history")   
