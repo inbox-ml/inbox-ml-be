@@ -35,3 +35,12 @@ class UserSerivice:
             data["id"] = docs[i].id
             docs[i] = data
         return docs
+    
+    @staticmethod
+    def archive_history_item(doc_id: str, item_id: str):
+        try:
+            db = FirebaseService.get_db()
+            db.collection(UserSerivice.__COLLECTION_NAME).document(doc_id).collection(UserSerivice.__HISTORY_COLLECTION_NAME).document(item_id).set({"status": "archived"}, merge=True)
+        except Exception as e:
+            raise Exception(f"An error occurred: {e}")
+            

@@ -8,4 +8,10 @@ class HistoryCreate(BaseModel):
     summary_title: str
 
 class History(HistoryCreate):
-    pass    
+    created_at: str
+    updated_at: str
+    status: str
+
+
+class ArchiveHistory(BaseModel):
+    item_id: str

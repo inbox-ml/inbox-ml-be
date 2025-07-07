@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Request, HTTPException, Response
 from dto.user_dto import UserCreate
+from dto.history_dto import ArchiveHistory
 from firebase_admin import auth
 from services.user_service import UserSerivice
 from decorators.require_user import require_user
@@ -40,3 +41,16 @@ async def get_user_history(request: Request):
       return Response(status_code=201, media_type="application/json", content=json.dumps(res))
    except:
       raise HTTPException(status_code=500, detail="Something went wrong when try to pull history")   
+   
+
+@router.patch("/archive_history_item")
+@require_user
+async def archive_history_item(request:Request):
+   try:
+      body = await request.body()
+      user = request.state.user
+      res = UserSerivice.archive_history_item(user.get("email"), json.loads(body).get("item_id"))
+      return Response(status_code=201, media_type="application/json", content=json.dumps(res))
+   except Exception as e:
+      raise HTTPException(status_code=500, detail=f"Something went wrong while try to archive history item. Error: {e}")   
+

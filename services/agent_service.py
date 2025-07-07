@@ -1,5 +1,6 @@
 from agents import Agent, Runner, WebSearchTool, RunContextWrapper, GuardrailFunctionOutput, input_guardrail
 from services.firebase_service import FirebaseService
+from datetime import datetime, timezone
 from pydantic import BaseModel
 
 class MailOutput(BaseModel):
@@ -47,6 +48,8 @@ class AgentService:
 
     async def save_response(self, data, email: str):
         db = FirebaseService.get_db()
-        print(email)
-        print(data)
-        db.collection("users").document(email).collection("history").add(document_data=data.dict())
+        document_data = data.dict()
+        document_data["created_at"] = datetime.now(timezone.utc).isoformat()
+        document_data["updated_at"] = datetime.now(timezone.utc).isoformat()
+        document_data["status"] = "active"
+        db.collection("users").document(email).collection("history").add(document_data)
